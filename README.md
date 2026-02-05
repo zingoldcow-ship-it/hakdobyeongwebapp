@@ -83,3 +83,9 @@ window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/XXXXX/exec";
 - Apps Script 웹앱 배포 설정이 **실행 사용자: 나 / 접근 권한: 링크가 있는 모든 사용자**인지 확인하세요.
 - `/exec` 주소를 사용하고, 수정 후에는 배포에서 **새 버전**으로 업데이트하세요.
 - 이 웹앱은 `text/plain`(JSON 문자열)로 전송합니다. Apps Script `doPost(e)`에서 `JSON.parse(e.postData.contents)`로 읽으면 됩니다.
+
+
+## v5 변경사항
+- is_correct / skipped 값이 항상 TRUE/FALSE로 저장됩니다.
+- 동일 Scene 재시도 시 attempt_no가 1,2,3… 자동 증가합니다.
+- 타이핑 속도/사운드는 v4와 동일합니다.

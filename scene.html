@@ -116,6 +116,12 @@ initTypingSound({src:'assets/typing.mp3'});
     await typeText(document.getElementById('docText'), scene.text, {speed:90});
 
     let attempt = 0;
+const attemptKey = () => `attempt_scene_${scene.id}`;
+try{
+  attempt = parseInt(localStorage.getItem(attemptKey()) || "0", 10);
+  if(Number.isNaN(attempt)) attempt = 0;
+}catch(e){ attempt = 0; }
+
 
     const answerBox = document.getElementById('answerBox');
     const feedback = document.getElementById('feedback');
@@ -154,13 +160,18 @@ initTypingSound({src:'assets/typing.mp3'});
     });
 
     async function submitAttempt(isCorrect, skipped){
+      // increment attempt counter (per scene)
+      attempt += 1;
+      try{ localStorage.setItem(attemptKey(), String(attempt)); }catch(e){}
       const base = buildBasePayload(scene.id);
       const payload = {
         ...base,
-        attempt_no: attempt,
+        attempt_no: String(attempt),
         answer: answerBox.value || "",
-        is_correct: !!isCorrect,
-        skipped: !!skipped,
+        // send explicit strings so Apps Script (|| '') doesn't blank out FALSE/0
+        is_correct: (isCorrect ? "TRUE" : "FALSE"),
+        skipped: (skipped ? "TRUE" : "FALSE"),
+
         confidence: confidenceSel.value || "",
         require: scene.require ?? 1,
         keywords: scene.keywords || []
