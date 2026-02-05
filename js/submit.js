@@ -2,7 +2,7 @@ import { nowISO, uid, pushLocalLog, getStudent } from './utils.js';
 export async function submitRow(payload){
   const row = { submission_id: uid(), submitted_at: nowISO(), ...payload };
   pushLocalLog(row);
-  const endpoint = window.SUBMIT_ENDPOINT || "";
+  const endpoint = window.SUBMIT_ENDPOINT || "https://script.google.com/macros/s/AKfycbx851thgkhhl92LVCpcrVJJw-ek8c5Y3Eeh1oSc99XTPnRerfO60xX6Z0L8Lr_Cv0QCBg/exec";
   if(!endpoint) return { ok:true, mode:"local_only", row };
   try{
     const res = await fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(row) });
