@@ -77,3 +77,9 @@ window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/XXXXX/exec";
 - Google Sheets 전송 URL이 `js/config.js`에 이미 설정되어 있습니다.
 - 교사용 로컬 보기 페이지는 기본 잠금이며, `teacher.html?key=TEACHER-5026` 로 접속합니다.
 - 키 문자열(TEACHER-5026)은 `teacher.html`에서 변경 가능합니다.
+
+
+## (문제 해결) 시트에 기록이 안 찍힐 때
+- Apps Script 웹앱 배포 설정이 **실행 사용자: 나 / 접근 권한: 링크가 있는 모든 사용자**인지 확인하세요.
+- `/exec` 주소를 사용하고, 수정 후에는 배포에서 **새 버전**으로 업데이트하세요.
+- 이 웹앱은 `text/plain`(JSON 문자열)로 전송합니다. Apps Script `doPost(e)`에서 `JSON.parse(e.postData.contents)`로 읽으면 됩니다.

@@ -48,7 +48,8 @@ function tick() {
 }
 
 export async function typeText(el, fullText, opts = {}) {
-  const speed = opts.speed ?? 120; // ms per char (faster)
+  const speed = opts.speed ?? 90; // ms per char (faster)
+ // ms per char (faster)
   el.textContent = '';
   const text = (fullText || '').replace(/\r\n/g, '\n');
 
