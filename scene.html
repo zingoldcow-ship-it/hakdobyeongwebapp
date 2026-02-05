@@ -113,7 +113,7 @@ initTypingSound({src:'assets/typing.mp3'});
     };
     document.getElementById('declaration').textContent = declMap[scene.id] || "";
 
-    await typeText(document.getElementById('docText'), scene.text, {speed:170});
+    await typeText(document.getElementById('docText'), scene.text, {speed:120});
 
     let attempt = 0;
 

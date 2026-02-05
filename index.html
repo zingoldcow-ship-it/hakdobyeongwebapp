@@ -36,6 +36,12 @@
   </div>
 </div>
 
+
+<div class="row" style="margin-top:10px">
+  <button class="btn ghost" id="soundTestBtn" type="button">🔊 소리 테스트</button>
+  <span class="small muted">※ 안 들리면 기기 볼륨/무음 모드 확인</span>
+</div>
+
 <div class="row" style="margin-top:14px">
   <button class="btn ghost" id="resetBtn">입력 초기화</button>
   <button class="btn primary" id="startBtn">Scene 1으로 이동하기 →</button>
@@ -49,6 +55,9 @@
 import { setStudent } from './js/utils.js';
 import { initTypingSound, primeTypingSound } from './js/typing.js';
 initTypingSound({src:'assets/typing.mp3'});
+const _soundTest = document.getElementById('soundTestBtn');
+if(_soundTest){ _soundTest.addEventListener('click', ()=>{ primeTypingSound(); }); }
+
 const el=(id)=>document.getElementById(id);
 function buildStudentId(c,n,name){ return `${(c||'').trim()}_${(n||'').trim()}_${(name||'').trim()}`; }
 try{ const p=JSON.parse(localStorage.getItem('student_profile')||'null');

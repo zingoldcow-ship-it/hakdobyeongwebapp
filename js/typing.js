@@ -1,31 +1,33 @@
-let audio = null;
+let audioCtx = null;
+let buffer = null;
+let gainNode = null;
 let primed = false;
 
 export function initTypingSound(opts = {}) {
   const src = opts.src || 'assets/typing.mp3';
-  const volume = (opts.volume ?? 0.6);
-  const rate = (opts.rate ?? 1.0);
+  const volume = (opts.volume ?? 0.35);
 
   try {
-    audio = new Audio(src);
-    audio.preload = 'auto';
-    audio.volume = volume;
-    audio.playbackRate = rate;
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = gainNode || audioCtx.createGain();
+    gainNode.gain.value = volume;
+    gainNode.connect(audioCtx.destination);
+
+    fetch(src)
+      .then(r => r.arrayBuffer())
+      .then(ab => audioCtx.decodeAudioData(ab))
+      .then(decoded => { buffer = decoded; })
+      .catch(() => { buffer = null; });
   } catch (e) {
-    audio = null;
+    audioCtx = null;
+    buffer = null;
   }
 }
 
 export async function primeTypingSound() {
-  // Call from a user gesture (click/tap) to unlock audio on many devices.
-  if (!audio || primed) return;
+  if(!audioCtx || primed) return;
   try {
-    const prev = audio.volume;
-    audio.volume = 0;
-    await audio.play();
-    audio.pause();
-    audio.currentTime = 0;
-    audio.volume = prev;
+    await audioCtx.resume();
     primed = true;
   } catch (e) {
     primed = true;
@@ -33,20 +35,20 @@ export async function primeTypingSound() {
 }
 
 function tick() {
-  if (!audio) return;
+  if(!audioCtx || !buffer || !gainNode) return;
   try {
-    audio.pause();
-    audio.currentTime = 0;
-    audio.play();
-    // Make the long sample behave like a short key click
-    setTimeout(() => {
-      try { audio.pause(); audio.currentTime = 0; } catch(e) {}
-    }, 70);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(gainNode);
+
+    const t = audioCtx.currentTime;
+    src.start(t);
+    src.stop(t + 0.06);
   } catch (e) {}
 }
 
 export async function typeText(el, fullText, opts = {}) {
-  const speed = opts.speed ?? 170; // slower: 1 char per tick
+  const speed = opts.speed ?? 120; // ms per char (faster)
   el.textContent = '';
   const text = (fullText || '').replace(/\r\n/g, '\n');
 
