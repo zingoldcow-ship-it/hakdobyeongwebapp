@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>학도병 탐구 - Scene</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <span class="pill" id="scenePill">Scene</span>
+          <span class="pill" id="studentPill">탐구자</span>
+          <span class="pill mono" id="runPill"></span>
+        </div>
+        <a href="index.html" class="small">처음으로</a>
+      </div>
+
+      <h1 id="docTitle">자료 제목</h1>
+      <h2 id="sceneTitle">Scene 제목</h2>
+
+      <div class="grid grid2" style="margin-top:10px">
+        <div class="status">
+          <div class="small muted" style="margin-bottom:6px">자료 내용 (한 글자씩 출력됩니다)</div>
+          <div id="docText" class="preline"></div>
+          <div class="footer">출처: <span id="sourceText"></span></div>
+        </div>
+
+        <div class="status">
+          <div class="small muted">탐구 선언</div>
+          <div id="declaration" class="preline" style="margin-top:6px"></div>
+
+          <hr style="border:none;border-top:1px solid var(--border);margin:12px 0"/>
+
+          <div class="small muted">질문</div>
+          <div id="question" style="margin-top:6px;font-weight:800"></div>
+
+          <label style="margin-top:12px">나의 답</label>
+          <textarea id="answerBox" placeholder="2문장 이내로 써 보세요."></textarea>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="checkBtn">채점/제출</button>
+            <button class="btn ghost" id="retryBtn" disabled>다시 써보기</button>
+          </div>
+
+          <div id="feedback" class="status" style="margin-top:10px;display:none"></div>
+
+          <div id="confidenceWrap" style="display:none;margin-top:10px">
+            <div class="small muted">확신도</div>
+            <select id="confidence">
+              <option value="확신함">확신함</option>
+              <option value="헷갈림">헷갈림</option>
+              <option value="잘 모르겠음">잘 모르겠음</option>
+            </select>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn danger" id="skipBtn" style="display:none">일단 넘어가기</button>
+            <button class="btn primary" id="nextBtn" style="display:none">다음 Scene →</button>
+          </div>
+
+          <div class="footer small">※ 정답이 아니어도 넘어갈 수 있습니다. 다만 제출 기록은 남습니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script type="module">
+    import { getStudent } from './js/utils.js';
+    import { typeText, enableTypingSound } from './js/typing.js';
+    import { checkAnswer, autoHint } from './js/quiz.js';
+    import { submitRow, buildBasePayload } from './js/submit.js';
+
+    const qs = new URLSearchParams(location.search);
+    const sceneId = parseInt(qs.get('scene') || '1', 10);
+    const scene = (window.SCENES || []).find(s => s.id === sceneId);
+
+    if(!scene){ alert('Scene를 찾을 수 없습니다.'); location.href='index.html'; }
+
+    enableTypingSound();
+
+    const student = getStudent();
+    document.getElementById('studentPill').textContent = student ? `${student.class_name} | ${student.number}번 | ${student.name}` : '탐구자 미입력';
+    document.getElementById('runPill').textContent = student?.run_id ? `run: ${student.run_id}` : '';
+    document.getElementById('scenePill').textContent = `Scene ${scene.id}`;
+    document.getElementById('sceneTitle').textContent = scene.title;
+    document.getElementById('docTitle').textContent = scene.docTitle;
+    document.getElementById('question').textContent = scene.prompt;
+    document.getElementById('sourceText').textContent = scene.source;
+
+    const declMap = {
+      1:"나는 전쟁이 일어나기 전 학도병이 어떤 삶을 살았는지를 살펴본다.",
+      2:"나는 전쟁이 사람들의 일상에 어떻게 시작되었는지를 살펴본다.",
+      3:"나는 전쟁이 어떻게 빠르게 확대되었는지를 살펴본다.",
+      4:"나는 학생들의 참전이 어떤 상황에서 이루어졌는지를 살펴본다.",
+      5:"나는 학도병과 정규군의 차이를 살펴본다.",
+      6:"나는 학도병이 어떤 준비 상태로 전쟁에 나갔는지를 살펴본다.",
+      7:"나는 학도병이 어떤 환경에서 생활했는지를 살펴본다.",
+      8:"나는 학도병이 처음 전투를 겪으며 어떤 경험을 했는지를 살펴본다.",
+      9:"나는 학도병 전투의 목적을 살펴본다.",
+      10:"나는 학도병이 위험한 작전에 투입된 이유를 살펴본다.",
+      11:"나는 학도병의 이름이 사라진 이유를 살펴본다.",
+      12:"나는 전쟁이 장기화된 이유를 살펴본다.",
+      13:"나는 학도병의 범위가 어디까지였는지를 살펴본다.",
+      14:"나는 전쟁이 끝난 뒤 학도병의 삶을 살펴본다.",
+      15:"나는 학도병 기록에 왜 공백이 생겼는지를 살펴본다.",
+      16:"나는 학도병 이야기를 배우는 이유를 생각해 본다."
+    };
+    document.getElementById('declaration').textContent = declMap[scene.id] || "";
+
+    await typeText(document.getElementById('docText'), scene.text, {speed:14, chunk:1});
+
+    let attempt = 0;
+
+    const answerBox = document.getElementById('answerBox');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const confidenceWrap = document.getElementById('confidenceWrap');
+    const confidenceSel = document.getElementById('confidence');
+
+    function showFeedback(kind, msg){
+      feedback.style.display = 'block';
+      feedback.classList.remove('ok','bad');
+      feedback.classList.add(kind);
+      feedback.textContent = msg;
+    }
+    function showNext(){
+      nextBtn.style.display = 'inline-block';
+      skipBtn.style.display = 'none';
+      confidenceWrap.style.display = 'block';
+    }
+    function showSkip(){
+      skipBtn.style.display = 'inline-block';
+      nextBtn.style.display = 'none';
+      confidenceWrap.style.display = 'block';
+    }
+    function goNext(){
+      const next = sceneId + 1;
+      location.href = next > 16 ? 'done.html' : `scene.html?scene=${next}`;
+    }
+    nextBtn.addEventListener('click', goNext);
+
+    retryBtn.addEventListener('click', ()=>{
+      answerBox.focus();
+      retryBtn.disabled = true;
+      feedback.style.display = 'none';
+    });
+
+    async function submitAttempt(isCorrect, skipped){
+      const base = buildBasePayload(scene.id);
+      const payload = {
+        ...base,
+        attempt_no: attempt,
+        answer: answerBox.value || "",
+        is_correct: !!isCorrect,
+        skipped: !!skipped,
+        confidence: confidenceSel.value || "",
+        require: scene.require ?? 1,
+        keywords: scene.keywords || []
+      };
+      await submitRow(payload);
+    }
+
+    skipBtn.addEventListener('click', async ()=>{
+      await submitAttempt(false, true);
+      goNext();
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', async ()=>{
+      const txt = (answerBox.value||"").trim();
+      if(!txt){ alert('답을 입력해 주세요.'); return; }
+      attempt += 1;
+
+      const result = checkAnswer(scene, txt);
+      if(result.correct){
+        showFeedback('ok', `정답에 가까워요 ✅ (핵심 단어 충족: ${result.hit}/${result.require})  기록을 저장했습니다.`);
+        retryBtn.disabled = true;
+        showNext();
+        await submitAttempt(true, false);
+      } else {
+        showFeedback('bad', `아직 핵심이 부족해요 ❗ (핵심 단어 충족: ${result.hit}/${result.require})\n${autoHint(scene)}`);
+        retryBtn.disabled = false;
+        showSkip();
+        await submitAttempt(false, false);
+      }
+    });
+  </script>
+</body>
+</html>

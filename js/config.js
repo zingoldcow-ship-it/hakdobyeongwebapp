@@ -1,0 +1,1 @@
+window.SUBMIT_ENDPOINT = "";

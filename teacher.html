@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>교사용 보기(로컬)</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <h1 style="margin:0">교사용 보기(로컬)</h1>
+        <a href="index.html" class="small">학생 화면으로</a>
+      </div>
+
+      <p class="muted preline">
+이 페이지는 현재 기기(브라우저)에 저장된 제출 기록을 보여줍니다.
+※ 교실에서 교사 PC로 제출이 모이려면 Google Sheets 연동을 설정하세요(README 참고).
+      </p>
+
+      <div class="grid grid2">
+        <div class="status">
+          <div class="small muted">기록 관리</div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="refreshBtn">새로고침</button>
+            <button class="btn ghost" id="exportJsonBtn">JSON 다운로드</button>
+            <button class="btn ghost" id="exportCsvBtn">CSV 다운로드</button>
+            <button class="btn danger" id="clearBtn">로컬 기록 삭제</button>
+          </div>
+          <div class="footer small">※ 로컬 기록 삭제는 되돌릴 수 없습니다.</div>
+        </div>
+
+        <div class="status">
+          <div class="small muted">요약</div>
+          <div id="summary" style="margin-top:10px" class="preline"></div>
+        </div>
+      </div>
+
+      <div class="status" style="margin-top:14px">
+        <div class="small muted">제출 로그</div>
+        <div id="tableWrap" style="margin-top:10px;overflow:auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getLocalLog, downloadText } from './js/utils.js';
+
+    const tableWrap = document.getElementById('tableWrap');
+    const summary = document.getElementById('summary');
+
+    function toCsv(rows){
+      const headers = ["submission_id","submitted_at","run_id","class","number","name","student_id","scene","attempt_no","is_correct","skipped","confidence","answer"];
+      const esc = (v)=> `"${String(v??"").replace(/"/g,'""')}"`;
+      const lines = [headers.join(",")];
+      for(const r of rows){
+        lines.push(headers.map(h=>esc(r[h])).join(","));
+      }
+      return lines.join("\n");
+    }
+
+    function render(){
+      const rows = getLocalLog();
+      const n = rows.length;
+      const correct = rows.filter(r=>r.is_correct).length;
+      const students = new Set(rows.map(r=>r.student_id).filter(Boolean));
+      summary.textContent = `총 제출: ${n}\n정답 기록: ${correct}\n학생 수(로컬 기준): ${students.size}`;
+
+      const cols = ["submitted_at","run_id","class","number","name","scene","attempt_no","is_correct","skipped","confidence","answer"];
+      let html = '<table style="width:100%;border-collapse:collapse">';
+      html += '<thead><tr>' + cols.map(c=>`<th style="text-align:left;border-bottom:1px solid rgba(255,255,255,.15);padding:8px">${c}</th>`).join('') + '</tr></thead><tbody>';
+      for(const r of rows.slice().reverse()){
+        html += '<tr>' + cols.map(c=>`<td style="border-bottom:1px solid rgba(255,255,255,.08);padding:8px;vertical-align:top">${String(r[c]??"")}</td>`).join('') + '</tr>';
+      }
+      html += '</tbody></table>';
+      tableWrap.innerHTML = html;
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', render);
+    document.getElementById('exportJsonBtn').addEventListener('click', ()=> downloadText(`hakdobyeong_log_${Date.now()}.json`, JSON.stringify(getLocalLog(), null, 2)));
+    document.getElementById('exportCsvBtn').addEventListener('click', ()=> downloadText(`hakdobyeong_log_${Date.now()}.csv`, toCsv(getLocalLog())));
+    document.getElementById('clearBtn').addEventListener('click', ()=>{ if(confirm('로컬 제출 기록을 모두 삭제할까요?')){ localStorage.removeItem('submission_log'); render(); } });
+
+    render();
+  </script>
+</body>
+</html>
