@@ -2,7 +2,7 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>학도병 탐구 웹앱</title><link rel="stylesheet" href="css/style.css"/>
 </head><body><div class="wrap"><div class="card">
-<div class="topbar"><div><span class="pill">학도병 이해 웹앱</span></div><a href="teacher.html" class="small">교사용 보기(로컬)</a></div>
+<div class="topbar"><div><span class="pill">학도병 이해 웹앱</span></div></div>
 <h1>학도병 탐구 시작 기록</h1>
 <p class="muted preline">
 나는 지금부터 한국전쟁 당시 등장한 학도병에 대해 알아보기 위한 탐구를 시작한다.
@@ -47,7 +47,8 @@
 
 <script type="module">
 import { setStudent } from './js/utils.js';
-import { enableTypingSound } from './js/typing.js';
+import { initTypingSound, primeTypingSound } from './js/typing.js';
+initTypingSound({src:'assets/typing.mp3'});
 const el=(id)=>document.getElementById(id);
 function buildStudentId(c,n,name){ return `${(c||'').trim()}_${(n||'').trim()}_${(name||'').trim()}`; }
 try{ const p=JSON.parse(localStorage.getItem('student_profile')||'null');
@@ -55,7 +56,7 @@ try{ const p=JSON.parse(localStorage.getItem('student_profile')||'null');
 }catch(e){}
 el('resetBtn').addEventListener('click', ()=>{ localStorage.removeItem('student_profile'); el('class_name').value=''; el('number').value=''; el('name').value=''; el('run_id').value=''; el('c1').checked=el('c2').checked=el('c3').checked=false; });
 el('startBtn').addEventListener('click', ()=>{
-  enableTypingSound();
+  primeTypingSound();
   const c1=el('c1').checked,c2=el('c2').checked,c3=el('c3').checked;
   const className=el('class_name').value.trim(), number=el('number').value.trim(), name=el('name').value.trim(), runId=el('run_id').value.trim();
   if(!className||!number||!name){ alert('반/번호/이름을 입력해 주세요.'); return; }

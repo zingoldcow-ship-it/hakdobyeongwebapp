@@ -71,7 +71,8 @@
   <script src="js/config.js"></script>
   <script type="module">
     import { getStudent } from './js/utils.js';
-    import { typeText, enableTypingSound } from './js/typing.js';
+    import { typeText, initTypingSound, primeTypingSound } from './js/typing.js';
+initTypingSound({src:'assets/typing.mp3'});
     import { checkAnswer, autoHint } from './js/quiz.js';
     import { submitRow, buildBasePayload } from './js/submit.js';
 
@@ -81,7 +82,7 @@
 
     if(!scene){ alert('Scene를 찾을 수 없습니다.'); location.href='index.html'; }
 
-    enableTypingSound();
+    primeTypingSound();
 
     const student = getStudent();
     document.getElementById('studentPill').textContent = student ? `${student.class_name} | ${student.number}번 | ${student.name}` : '탐구자 미입력';
@@ -112,7 +113,7 @@
     };
     document.getElementById('declaration').textContent = declMap[scene.id] || "";
 
-    await typeText(document.getElementById('docText'), scene.text, {speed:14, chunk:1});
+    await typeText(document.getElementById('docText'), scene.text, {speed:170});
 
     let attempt = 0;
 

@@ -71,3 +71,9 @@ window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/XXXXX/exec";
 ## 4) 채점 방식(키워드 포함)
 - 각 Scene마다 핵심 키워드가 설정되어 있으며, 답안에 포함되면 정답 처리됩니다.
 - 오답이어도 **넘어가기 가능**(학습 흐름 유지).
+
+
+## 현재 설정
+- Google Sheets 전송 URL이 `js/config.js`에 이미 설정되어 있습니다.
+- 교사용 로컬 보기 페이지는 기본 잠금이며, `teacher.html?key=TEACHER-5026` 로 접속합니다.
+- 키 문자열(TEACHER-5026)은 `teacher.html`에서 변경 가능합니다.

@@ -7,6 +7,39 @@
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
+<script>
+  (function(){
+    const okKey = localStorage.getItem('teacher_key') || '';
+    const qs = new URLSearchParams(location.search);
+    const key = qs.get('key') || okKey;
+    if(key !== 'TEACHER-5026'){
+      document.documentElement.innerHTML = `
+      <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+      <title>교사용 보기(잠금)</title><link rel="stylesheet" href="css/style.css"/></head>
+      <body><div class="wrap"><div class="card">
+        <h1>교사용 보기(잠금)</h1>
+        <p class="muted preline">이 페이지는 교사용입니다.\n선생님은 주소 뒤에 ?key=TEACHER-5026 를 붙여 접속하세요.\n예: .../teacher.html?key=TEACHER-5026</p>
+        <label>교사용 키</label>
+        <input id="k" placeholder="TEACHER-5026"/>
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="go">열기</button>
+          <a class="btn ghost" href="index.html">학생 화면으로</a>
+        </div>
+      </div></div>
+      <script>
+        document.getElementById('go').addEventListener('click', function(){
+          const v = (document.getElementById('k').value||'').trim();
+          if(v==='TEACHER-5026'){ localStorage.setItem('teacher_key', v); location.href='teacher.html?key='+encodeURIComponent(v); }
+          else alert('키가 올바르지 않습니다.');
+        });
+      <\/script></body>`;
+    } else {
+      localStorage.setItem('teacher_key', key);
+    }
+  })();
+</script>
+
+
   <div class="wrap">
     <div class="card">
       <div class="topbar">
