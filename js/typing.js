@@ -6,21 +6,22 @@ let primed = false;
 
 export function initTypingSound(opts = {}) {
   const src = opts.src || 'assets/typing.mp3';
-  // NOTE: we amplify beyond 1.0 because the sample itself is very quiet.
-  const volume = (opts.volume ?? 2.8); // 1.0=100%, 2.8≈+9dB
+
+  // The sample is very quiet on many laptop speakers.
+  // We amplify hard but protect ears with a compressor (limiter-like).
+  const volume = (opts.volume ?? 5.0); // 1.0=100%, 5.0≈+14dB
 
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
 
-    // Compressor first (prevents harsh clipping when we amplify)
+    // Limiter-ish compressor (prevents harsh clipping)
     compNode = compNode || audioCtx.createDynamicsCompressor();
-    compNode.threshold.value = -24;
-    compNode.knee.value = 30;
-    compNode.ratio.value = 12;
-    compNode.attack.value = 0.003;
-    compNode.release.value = 0.12;
+    compNode.threshold.value = -30;
+    compNode.knee.value = 24;
+    compNode.ratio.value = 20;
+    compNode.attack.value = 0.002;
+    compNode.release.value = 0.18;
 
-    // Gain after compressor
     gainNode = gainNode || audioCtx.createGain();
     gainNode.gain.value = volume;
 
@@ -49,7 +50,7 @@ export async function primeTypingSound() {
 }
 
 function tick() {
-  if(!audioCtx || !buffer || !gainNode) return;
+  if(!audioCtx || !buffer) return;
   try {
     const src = audioCtx.createBufferSource();
     src.buffer = buffer;
@@ -57,8 +58,9 @@ function tick() {
 
     const t = audioCtx.currentTime;
     src.start(t);
-    // slightly longer click for audibility
-    src.stop(t + 0.09);
+
+    // Slightly longer click for audibility on weak speakers
+    src.stop(t + 0.12);
   } catch (e) {}
 }
 
