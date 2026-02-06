@@ -38,7 +38,7 @@
 
 
 <div class="row" style="margin-top:10px">
-  <button class="btn ghost" id="soundTestBtn" type="button">🔊 소리 테스트</button>
+  <button class="btn ghost" id="soundTestBtn" type="button">🔊 소리 테스트</button><span id="soundTestHidden" style="display:none"></span>
   <span class="small muted">※ 안 들리면 기기 볼륨/무음 모드 확인</span>
 </div>
 
@@ -53,10 +53,11 @@
 
 <script type="module">
 import { setStudent } from './js/utils.js';
-import { initTypingSound, primeTypingSound } from './js/typing.js';
+import { initTypingSound, primeTypingSound, typeText } from './js/typing.js';
 initTypingSound({src:'assets/typing.mp3'});
 const _soundTest = document.getElementById('soundTestBtn');
-if(_soundTest){ _soundTest.addEventListener('click', ()=>{ primeTypingSound(); }); }
+if(_soundTest){ _soundTest.addEventListener('click', async ()=>{ await primeTypingSound(); const h=document.getElementById('soundTestHidden'); if(h) await typeText(h,'타자소리테스트',{speed:90}); });
+}
 
 const el=(id)=>document.getElementById(id);
 function buildStudentId(c,n,name){ return `${(c||'').trim()}_${(n||'').trim()}_${(name||'').trim()}`; }
