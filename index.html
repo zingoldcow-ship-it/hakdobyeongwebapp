@@ -64,12 +64,24 @@ function buildStudentId(c,n,name){ return `${(c||'').trim()}_${(n||'').trim()}_$
 try{ const p=JSON.parse(localStorage.getItem('student_profile')||'null');
   if(p){ el('class_name').value=p.class_name||''; el('number').value=p.number||''; el('name').value=p.name||''; el('run_id').value=p.run_id||''; }
 }catch(e){}
+
+const startBtn = el('startBtn');
+function updateStartEnabled(){
+  const className = el('class_name').value.trim();
+  const number = el('number').value.trim();
+  const name = el('name').value.trim();
+  const runId = el('run_id').value.trim();
+  startBtn.disabled = !(className && number && name && runId);
+}
+['class_name','number','name','run_id'].forEach(id=> el(id).addEventListener('input', updateStartEnabled));
+updateStartEnabled();
 el('resetBtn').addEventListener('click', ()=>{ localStorage.removeItem('student_profile'); el('class_name').value=''; el('number').value=''; el('name').value=''; el('run_id').value=''; el('c1').checked=el('c2').checked=el('c3').checked=false; });
-el('startBtn').addEventListener('click', ()=>{
+startBtn.addEventListener('click', ()=>{
   primeTypingSound();
   const c1=el('c1').checked,c2=el('c2').checked,c3=el('c3').checked;
   const className=el('class_name').value.trim(), number=el('number').value.trim(), name=el('name').value.trim(), runId=el('run_id').value.trim();
   if(!className||!number||!name){ alert('반/번호/이름을 입력해 주세요.'); return; }
+  if(!runId){ alert('수업 코드를 입력해 주세요.'); return; }
   if(!(c1&&c2&&c3)){ if(!confirm('체크 항목이 모두 선택되지 않았어요. 그래도 진행할까요?')) return; }
   setStudent({ class_name:className, number, name, run_id:runId, student_id: buildStudentId(className, number, name) });
   location.href='scene.html?scene=1';

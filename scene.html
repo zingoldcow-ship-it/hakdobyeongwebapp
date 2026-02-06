@@ -69,6 +69,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/config.js"></script>
+  <div id="toast" class="toast" aria-live="polite"></div>
   <script type="module">
     import { getStudent } from './js/utils.js';
     import { typeText, initTypingSound, primeTypingSound } from './js/typing.js';
@@ -131,6 +132,17 @@ try{
     const confidenceWrap = document.getElementById('confidenceWrap');
     const confidenceSel = document.getElementById('confidence');
 
+    // Toast (simple, non-blocking confirmation)
+    const toast = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(msg){
+      if(!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      if(toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove('show'), 1400);
+    }
+
     function showFeedback(kind, msg){
       feedback.style.display = 'block';
       feedback.classList.remove('ok','bad');
@@ -176,7 +188,9 @@ try{
         require: scene.require ?? 1,
         keywords: scene.keywords || []
       };
-      await submitRow(payload);
+      const res = await submitRow(payload);
+      if(res && res.mode && res.mode !== 'local_only') showToast('제출 완료');
+      else showToast('저장 완료');
     }
 
     skipBtn.addEventListener('click', async ()=>{
