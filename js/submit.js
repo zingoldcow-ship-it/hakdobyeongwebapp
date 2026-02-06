@@ -1,51 +1,35 @@
 import { nowISO, uid, pushLocalLog } from './utils.js';
 
-function getAttempt(scene){
-  const key = 'attempt_' + scene;
-  const cur = parseInt(localStorage.getItem(key) || '0', 10) + 1;
-  localStorage.setItem(key, String(cur));
-  return cur;
+function toFormBody(obj){
+  const p = new URLSearchParams();
+  for(const [k,v] of Object.entries(obj)){
+    if(Array.isArray(v)) p.set(k, v.join('|'));
+    else p.set(k, (v ?? '').toString());
+  }
+  return p.toString();
 }
 
 export async function submitRow(payload){
-  const attempt_no = getAttempt(payload.scene);
+  const row = { submission_id: uid(), submitted_at: nowISO(), ...payload };
 
-  const row = {
-    submission_id: uid(),
-    submitted_at: nowISO(),
-    attempt_no,
-    // normalize booleans
-    is_correct: payload.is_correct === true,
-    skipped: payload.skipped === true,
-    ...payload
-  };
-
+  // Always keep a local copy first (failsafe)
   pushLocalLog(row);
 
   const endpoint = window.SUBMIT_ENDPOINT || "";
   if(!endpoint) return { ok:true, mode:"local_only", row };
 
-  const json = JSON.stringify(row);
-
-  // sendBeacon first (most reliable)
-  try{
-    if (navigator.sendBeacon) {
-      const blob = new Blob([json], { type: 'text/plain;charset=utf-8' });
-      const queued = navigator.sendBeacon(endpoint, blob);
-      if (queued) return { ok:true, mode:"beacon_queued", row };
-    }
-  }catch(e){}
-
-  // fallback fetch
+  // Use form-urlencoded to avoid CORS preflight + redirect quirks.
+  // Apps Script can read values via e.parameter (recommended).
   try{
     await fetch(endpoint, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: json,
-      cache: 'no-store'
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
+      body: toFormBody(row),
+      cache: 'no-store',
+      redirect: 'follow'
     });
-    return { ok:true, mode:"fetch_no_cors", row };
+    return { ok:true, mode:"fetch_form_no_cors", row };
   }catch(e){
     return { ok:true, mode:"local_only_due_to_error", row, error:String(e) };
   }

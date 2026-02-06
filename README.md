@@ -100,3 +100,55 @@ Apps Script에서 아래처럼 되어 있어야 학생 기기에서도 기록됩
 그리고 코드 수정 후에는 반드시 **배포 관리에서 '새 버전'으로 업데이트**해야 합니다.
 
 참고: 학생이 로그인되지 않은 브라우저에서 전송하면, 권한이 좁을 경우 Google이 로그인 페이지로 리다이렉트합니다. 이때 no-cors/Beacon은 실패를 표시하지 않고 조용히 기록이 안 될 수 있습니다.
+
+
+
+## Apps Script 권장 doPost (폼 전송 대응)
+웹앱은 기본적으로 `application/x-www-form-urlencoded`로 전송합니다(가장 안정적).
+아래처럼 doPost를 바꾸면 **폼 전송/JSON 전송 둘 다** 저장됩니다.
+
+```js
+function doGet(){
+  return ContentService.createTextOutput('OK').setMimeType(ContentService.MimeType.TEXT);
+}
+
+function doPost(e){
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('log') || ss.insertSheet('log');
+
+  if(sheet.getLastRow()===0){
+    sheet.appendRow(['submission_id','submitted_at','run_id','class','number','name','student_id','scene','attempt_no','is_correct','skipped','confidence','require','keywords','answer']);
+  }
+
+  // 1) 폼 전송 우선
+  let data = (e && e.parameter) ? e.parameter : {};
+
+  // 2) JSON 전송도 혹시 들어오면 처리
+  const raw = (e && e.postData && e.postData.contents) ? e.postData.contents : '';
+  if(raw && (!data || Object.keys(data).length===0)){
+    try{ data = JSON.parse(raw); }catch(err){}
+  }
+
+  sheet.appendRow([
+    data.submission_id || '',
+    data.submitted_at || '',
+    data.run_id || '',
+    data.class || '',
+    data.number || '',
+    data.name || '',
+    data.student_id || '',
+    data.scene || '',
+    data.attempt_no || '',
+    data.is_correct || '',
+    data.skipped || '',
+    data.confidence || '',
+    data.require || '',
+    data.keywords || '',
+    data.answer || ''
+  ]);
+
+  return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
+}
+```
+
+⚠️ 제출 URL은 `script.google.com/macros/s/.../exec` 를 사용하세요(브라우저가 보여주는 `script.googleusercontent.com` 주소는 매번 달라질 수 있어요).
