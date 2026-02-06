@@ -5,7 +5,7 @@ let primed = false;
 
 export function initTypingSound(opts = {}) {
   const src = opts.src || 'assets/typing.mp3';
-  const volume = (opts.volume ?? 0.35);
+  const volume = (opts.volume ?? 0.9);
 
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
