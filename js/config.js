@@ -1,1 +1,1 @@
-window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbzhz6cnCHs1F61oMFmr7YbDClvMeL0p6RzmLMLeLK938nRYeZbXB-WvNy-yjRuk45C97g/exec";
+window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbw-JJ0CuGIw0lgaHpbIHhQTSjDhB2buqNGkvx2sYuAyZv5QRpieP3JH9ItvgPh-V7ekZA/exec";
