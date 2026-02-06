@@ -152,3 +152,71 @@ function doPost(e){
 ```
 
 ⚠️ 제출 URL은 `script.google.com/macros/s/.../exec` 를 사용하세요(브라우저가 보여주는 `script.googleusercontent.com` 주소는 매번 달라질 수 있어요).
+
+
+
+## (v9) 전송이 아예 실행기록(Executions)에 안 뜰 때: doGet 로깅 방식(가장 강력)
+학교/계정/브라우저에 따라 `POST`가 조용히 막히는 경우가 있어, v9부터는 **GET(이미지 비콘)** 으로도 기록되게 설계했습니다.
+아래 코드로 Apps Script를 교체해 주세요.
+
+```js
+const SPREADSHEET_ID = '여기에_스프레드시트_ID'; // URL에서 /d/ 다음 문자열
+
+function ensureHeader_(sheet){
+  if(sheet.getLastRow()===0){
+    sheet.appendRow(['submission_id','submitted_at','run_id','class','number','name','student_id','scene','attempt_no','is_correct','skipped','confidence','require','keywords','answer']);
+  }
+}
+
+function writeRow_(data){
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName('log') || ss.insertSheet('log');
+  ensureHeader_(sheet);
+  sheet.appendRow([
+    data.submission_id || '',
+    data.submitted_at || '',
+    data.run_id || '',
+    data.class || '',
+    data.number || '',
+    data.name || '',
+    data.student_id || '',
+    data.scene || '',
+    data.attempt_no || '',
+    data.is_correct || '',
+    data.skipped || '',
+    data.confidence || '',
+    data.require || '',
+    data.keywords || '',
+    data.answer || ''
+  ]);
+}
+
+function doGet(e){
+  // 1) 단순 테스트: /exec 만 열면 OK
+  const p = (e && e.parameter) ? e.parameter : {};
+  // 2) 제출이면: submission_id가 있을 때 기록
+  if(p && p.submission_id){
+    writeRow_(p);
+    return ContentService.createTextOutput('logged').setMimeType(ContentService.MimeType.TEXT);
+  }
+  return ContentService.createTextOutput('OK').setMimeType(ContentService.MimeType.TEXT);
+}
+
+function doPost(e){
+  // JSON/폼 전송도 받아줌(혹시 사용할 경우 대비)
+  let data = (e && e.parameter) ? e.parameter : {};
+  const raw = (e && e.postData && e.postData.contents) ? e.postData.contents : '';
+  if(raw && Object.keys(data).length===0){
+    try{ data = JSON.parse(raw); }catch(err){}
+  }
+  if(data && data.submission_id) writeRow_(data);
+  return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
+}
+```
+
+✅ 반드시 배포(웹 앱)에서
+- 실행 사용자: 나(Me)
+- 접근 권한: 모든 사용자
+- **새 버전**으로 업데이트
+
+그리고 config.js에는 `https://script.google.com/macros/s/.../exec` 를 그대로 넣어주세요.
