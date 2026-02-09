@@ -1,4 +1,4 @@
-:root{--bg:#f3f5f9;--card:#ffffff;--text:#111827;--muted:#4b5563;--accent:#2563eb;--danger:#dc2626;--ok:#059669;--border:rgba(17,24,39,.12);--shadow:0 10px 30px rgba(17,24,39,.08);}
+:root{--bg:#f6f8fc;--card:#ffffff;--text:#111827;--muted:#4b5563;--accent:#2563eb;--danger:#dc2626;--ok:#059669;--border:rgba(17,24,39,.12);--shadow:0 10px 30px rgba(17,24,39,.08);}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",Arial,sans-serif;background:radial-gradient(900px 600px at 15% 0%,rgba(37,99,235,.10),transparent 60%),radial-gradient(900px 600px at 85% 10%,rgba(5,150,105,.08),transparent 60%),var(--bg);color:var(--text);min-height:100vh;}
 .wrap{max-width:980px;margin:0 auto;padding:28px 18px 48px}
@@ -47,3 +47,12 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
 .btn-lg{padding:14px 18px;border-radius:16px;font-size:15px}
 .card-accent{border-color:rgba(37,99,235,.25);background:linear-gradient(180deg,#ffffff, #f8fafc)}
 .pill{background:#ffffff}
+
+
+.pill-title{font-size:28px;line-height:1.15;font-weight:800;color:var(--text);padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.8);border:1px solid var(--border);box-shadow:0 6px 18px rgba(17,24,39,.06)}
+.page-title{margin-bottom:18px}
+.card-yellow{background:#fff7d6}
+.card-mint{background:#e9fbf2}
+.card-blue{background:#e9f2ff}
+.card-yellow .muted,.card-mint .muted,.card-blue .muted{color:rgba(17,24,39,.72)}
+

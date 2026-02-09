@@ -5,13 +5,12 @@
 <body>
   <div class="wrap">
     <div class="page-title">
-      <div class="pill">학도병 이해 웹앱</div>
-      <h1>학도병 탐구 시작 기록</h1>
-      <p class="muted">반·번호·이름을 입력하고, 오늘의 탐구를 시작해요.</p>
+      <div class="pill pill-title">학도병 이해 및 탐구 웹앱</div>
+<p class="muted">반·번호·이름을 입력하고, 오늘의 탐구를 시작해요.</p>
     </div>
 
     <div class="cards">
-      <section class="card">
+      <section class="card card-yellow">
         <h2>탐구 시작 다짐</h2>
         <p class="muted preline">
 나는 지금부터 한국전쟁 당시 등장한 학도병에 대해 알아보기 위한 탐구를 시작한다.
@@ -23,7 +22,7 @@
         </p>
       </section>
 
-      <section class="card">
+      <section class="card card-mint">
         <h2>탐구 태도 체크</h2>
         <div class="checklist">
           <label class="checkitem"><input type="checkbox" id="c1"/><span>나는 자료를 읽고 근거를 찾아 생각한다.</span></label>
@@ -32,7 +31,7 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card card-blue">
         <h2>학생 정보 입력</h2>
         <div class="grid grid3">
           <div>
@@ -53,13 +52,6 @@
           <label class="label">수업 코드</label>
           <input id="run_id" placeholder="선생님이 알려준 코드" autocomplete="off"/>
           <div class="small muted" style="margin-top:6px">※ 수업 코드는 선생님이 정해 준 값이에요.</div>
-        </div>
-
-        <div class="row" style="margin-top:14px;gap:10px;flex-wrap:wrap">
-          <button class="btn ghost" id="soundTestBtn" type="button">🔊 소리 테스트</button>
-          <button class="btn ghost" id="resetBtn" type="button">입력 초기화</button>
-          <span class="small muted">※ 안 들리면 기기 볼륨/무음 모드 확인</span>
-          <span id="soundTestHidden" style="display:none"></span>
         </div>
       </section>
 
