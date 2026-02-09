@@ -25,8 +25,7 @@
         <div class="status">
           <div class="small muted" style="margin-bottom:6px">자료 내용 (한 글자씩 출력됩니다)</div>
           <div id="docText" class="preline"></div>
-          
-        </div>
+</div>
 
         <div class="status">
           <div class="small muted">탐구활동</div>
@@ -73,7 +72,7 @@
   <script type="module">
     import { getStudent } from './js/utils.js';
     import { typeText, initTypingSound, primeTypingSound } from './js/typing.js';
-initTypingSound({src:'assets/typing.mp3'});
+initTypingSound({src:'assets/typing.mp3', volume:0.7});
     import { checkAnswer, autoHint } from './js/quiz.js';
     import { submitRow, buildBasePayload } from './js/submit.js';
 
@@ -91,7 +90,7 @@ initTypingSound({src:'assets/typing.mp3'});
     document.getElementById('scenePill').textContent = `Scene ${scene.id}`;
     document.getElementById('sceneTitle').textContent = scene.title;
     document.getElementById('docTitle').textContent = scene.docTitle;
-    document.getElementById('question').textContent = scene.prompt;    document.getElementById('declaration').textContent = scene.activity || "";
+    document.getElementById('question').textContent = scene.prompt;document.getElementById('declaration').textContent = scene.activity || '';
 
     await typeText(document.getElementById('docText'), scene.text, {speed:90});
 

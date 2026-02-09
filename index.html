@@ -13,15 +13,6 @@
 탐구가 끝난 뒤에는 학도병이 한국전쟁 속에서 어떤 존재였는지를 나의 말로 정리해 볼 것이다.
 </p>
 
-<details class="status" style="margin-top:14px">
-  <summary style="cursor:pointer;font-weight:800">자료 출처</summary>
-  <div class="small muted preline" style="margin-top:8px">• 국가기록원 / 국방부 군사편찬연구소
-• 국가기록원 / 국사편찬위원회 / 교육부 교육사 자료
-• 국가기록원 / 보훈처
-• 국방부 군사편찬연구소 / 국가기록원
-• 국사편찬위원회 / 국가기록원</div>
-</details>
-
 <div class="grid grid2">
   <div>
     <h2>탐구 태도 체크</h2>
@@ -63,7 +54,7 @@
 <script type="module">
 import { setStudent } from './js/utils.js';
 import { initTypingSound, primeTypingSound, typeText } from './js/typing.js';
-initTypingSound({src:'assets/typing.mp3'});
+initTypingSound({src:'assets/typing.mp3', volume:0.7});
 const _soundTest = document.getElementById('soundTestBtn');
 if(_soundTest){ _soundTest.addEventListener('click', async ()=>{ await primeTypingSound(); const h=document.getElementById('soundTestHidden'); if(h) await typeText(h,'타자소리테스트',{speed:90}); });
 }
