@@ -25,15 +25,16 @@
         <div class="status">
           <div class="small muted" style="margin-bottom:6px">자료 내용 (한 글자씩 출력됩니다)</div>
           <div id="docText" class="preline"></div>
-</div>
+          
+        </div>
 
         <div class="status">
-          <div class="small muted">탐구 선언</div>
+          <div class="small muted">탐구활동</div>
           <div id="declaration" class="preline" style="margin-top:6px"></div>
 
           <hr style="border:none;border-top:1px solid var(--border);margin:12px 0"/>
 
-          <div class="small muted">질문</div>
+          <div class="small muted">탐구질문</div>
           <div id="question" style="margin-top:6px;font-weight:800"></div>
 
           <label style="margin-top:12px">나의 답</label>
@@ -90,27 +91,7 @@ initTypingSound({src:'assets/typing.mp3'});
     document.getElementById('scenePill').textContent = `Scene ${scene.id}`;
     document.getElementById('sceneTitle').textContent = scene.title;
     document.getElementById('docTitle').textContent = scene.docTitle;
-    document.getElementById('question').textContent = scene.prompt;    const declMap = {
-      1:"나는 전쟁 이전 학도병이 어떤 일상을 살았는지를 살펴본다.",
-      2:"나는 전쟁이 사람들의 일상 속에 어떻게 시작되었는지를 살펴본다.",
-      3:"나는 전쟁 초기 전선이 왜 빠르게 무너졌는지를 살펴본다.",
-      4:"나는 학생들의 참전이 어떤 상황에서 이루어졌는지를 살펴본다.",
-      5:"나는 학도병의 군사적 지위를 살펴본다.",
-      6:"나는 학도병의 훈련 실태를 살펴본다.",
-      7:"나는 학도병의 생활 여건을 살펴본다.",
-      8:"나는 학도병이 처음 경험한 전투가 어떤 충격이었는지를 살펴본다.",
-      9:"나는 학도병 전투의 목적이 무엇이었는지를 살펴본다.",
-      10:"나는 장사상륙작전의 목적과 의미를 살펴본다.",
-      11:"나는 낙동강 방어선 전투의 의미를 살펴본다.",
-      12:"나는 학도병 명칭이 사라진 이유를 살펴본다.",
-      13:"나는 전쟁이 장기화된 이유를 살펴본다.",
-      14:"나는 학도병의 출신 배경을 살펴본다.",
-      15:"나는 전쟁 이후 학도병의 삶을 살펴본다.",
-      16:"나는 학도병 기록이 남지 못한 이유를 살펴본다.",
-      17:"나는 우리가 학도병의 이야기를 배우는 이유를 살펴본다."
-    };
-
-    document.getElementById('declaration').textContent = declMap[scene.id] || "";
+    document.getElementById('question').textContent = scene.prompt;    document.getElementById('declaration').textContent = scene.activity || "";
 
     await typeText(document.getElementById('docText'), scene.text, {speed:90});
 

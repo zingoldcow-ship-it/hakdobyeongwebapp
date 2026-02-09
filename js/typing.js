@@ -9,7 +9,7 @@ export function initTypingSound(opts = {}) {
 
   // The sample is very quiet on many laptop speakers.
   // We amplify hard but protect ears with a compressor (limiter-like).
-  const volume = (opts.volume ?? 2.2); // tuned for classroom (1.0=100%, 2.2≈+7dB)
+  const volume = (opts.volume ?? 1.54); // tuned for classroom (1.0=100%, 2.2≈+7dB)
 
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
