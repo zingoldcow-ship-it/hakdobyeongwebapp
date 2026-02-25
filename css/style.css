@@ -94,3 +94,51 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
 @media (max-width: 900px){
   .scene-media img{ max-height:180px; }
 }
+
+
+/* ===============================
+   🎨 v23 UX Color Upgrade (Grade 5 Optimized)
+   =============================== */
+
+/* 자료 내용 카드 */
+.card-accent,
+.data-card {
+    background: #F6F1E8 !important;
+    border: 1px solid #E2DBCF !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+}
+
+/* 탐구 활동 카드 */
+.activity-card,
+.question-card {
+    background: #EAF2F8 !important;
+    border: 1px solid #D4E3F1 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+
+/* 나의 답 입력 영역 */
+textarea,
+.answer-input {
+    background: #FFFFFF !important;
+    border: 1px solid #C9D8E6 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+}
+
+textarea:focus,
+.answer-input:focus {
+    border-color: #3B6FD8 !important;
+    box-shadow: 0 0 0 3px rgba(59,111,216,0.15) !important;
+}
+
+/* 카드 모서리 부드럽게 */
+.card,
+.card-accent,
+.activity-card {
+    border-radius: 16px !important;
+}
+
+/* 전체 배경 약간 따뜻하게 */
+body {
+    background: #F8F6F2 !important;
+}
+
