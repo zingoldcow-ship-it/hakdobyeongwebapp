@@ -9,7 +9,7 @@ export function initTypingSound(opts = {}) {
 
   // The sample is very quiet on many laptop speakers.
   // We amplify hard but protect ears with a compressor (limiter-like).
-  const volume = (opts.volume ?? 0.7);
+  const volume = (opts.volume ?? 0.35);
 
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
@@ -65,15 +65,15 @@ function tick() {
 }
 
 export async function typeText(el, fullText, opts = {}) {
-  const speed = opts.speed ?? 90; // ms per char
+  const speed = opts.speed ?? 45; // ms per char
+  const soundEvery = opts.soundEvery ?? 2; // play sound every N chars
   el.textContent = '';
   const text = (fullText || '').replace(/\r\n/g, '\n');
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     el.textContent += ch;
-    if (ch !== '
-' && ch !== ' ') { if ((i % 2) === 0) tick(); }
+    if (ch !== '\n' && ch !== ' ' && (i % soundEvery === 0)) tick();
     await new Promise(r => setTimeout(r, speed));
   }
 }

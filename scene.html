@@ -10,14 +10,16 @@
   <div class="wrap">
     <div class="card">
       <div class="topbar">
-        <div class="row tight pills">
+        <div class="top-pills">
           <span class="pill" id="scenePill">Scene</span>
           <span class="pill" id="studentPill">탐구자</span>
           <span class="pill mono" id="runPill"></span>
         </div>
         <a href="index.html" class="home-card" aria-label="처음으로">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M3 10.5 12 3l9 7.5v10.5a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2V10.5z" fill="currentColor"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10.5L12 3l9 7.5"></path>
+            <path d="M5 10v10h14V10"></path>
+            <path d="M9 20v-6h6v6"></path>
           </svg>
           <span>처음으로</span>
         </a>
@@ -97,7 +99,7 @@ initTypingSound({src:'assets/typing.mp3', volume:0.35});
     document.getElementById('docTitle').textContent = scene.docTitle;
     document.getElementById('question').textContent = scene.prompt;document.getElementById('declaration').textContent = scene.activity || '';
 
-    await typeText(document.getElementById('docText'), scene.text, {speed:45});
+    await typeText(document.getElementById('docText'), scene.text, {speed:45, soundEvery:2});
 
     let attempt = 0;
 const attemptKey = () => `attempt_scene_${scene.id}`;
