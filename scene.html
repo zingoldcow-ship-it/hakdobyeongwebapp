@@ -31,6 +31,7 @@
       <div class="grid grid2" style="margin-top:10px">
         <div class="status">
           <div class="small muted" style="margin-bottom:6px">자료 내용 (한 글자씩 출력됩니다)</div>
+          <div class="scene-media"><img id="sceneImage" alt="Scene 이미지" loading="lazy"/></div>
           <div id="docText" class="preline"></div>
 </div>
 
@@ -87,7 +88,34 @@ initTypingSound({src:'assets/typing.mp3', volume:0.35});
     const sceneId = parseInt(qs.get('scene') || '1', 10);
     const scene = (window.SCENES || []).find(s => s.id === sceneId);
 
+
+    function setSceneImage(id){
+      const img = document.getElementById('sceneImage');
+      if(!img) return;
+      const candidates = [
+        `assets/scenes/scene${id}.png`,
+        `assets/scenes/scene${id}.jpg`,
+        `assets/scenes/scene${id}.jpeg`,
+        `assets/scenes/scene${id}.webp`,
+        `assets/scenes/씬${id}.png`,
+        `assets/scenes/씬${id}.jpg`,
+        `assets/scenes/씬${id}.jpeg`,
+        `assets/scenes/씬${id}.webp`,
+      ];
+      let i=0;
+      const tryNext=()=>{
+        if(i>=candidates.length){ img.style.display='none'; return; }
+        img.src = candidates[i++];
+      };
+      img.onerror = ()=>tryNext();
+      img.onload = ()=>{ img.style.display='block'; };
+      tryNext();
+    }
+
+
     if(!scene){ alert('Scene를 찾을 수 없습니다.'); location.href='index.html'; }
+
+    setSceneImage(sceneId);
 
     primeTypingSound();
 

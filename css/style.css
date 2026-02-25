@@ -74,3 +74,23 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
 .card-blue{background:#e9f2ff}
 .card-yellow .muted,.card-mint .muted,.card-blue .muted{color:rgba(17,24,39,.72)}
 
+
+
+/* Scene image */
+.scene-media{
+  margin:10px 0 12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(17,24,39,.06);
+}
+.scene-media img{
+  width:100%;
+  display:block;
+  max-height:220px;
+  object-fit:cover;
+}
+@media (max-width: 900px){
+  .scene-media img{ max-height:180px; }
+}
