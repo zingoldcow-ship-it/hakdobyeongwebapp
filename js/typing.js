@@ -72,7 +72,8 @@ export async function typeText(el, fullText, opts = {}) {
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     el.textContent += ch;
-    if (ch !== '\n' && ch !== ' ') tick();
+    if (ch !== '
+' && ch !== ' ') { if ((i % 2) === 0) tick(); }
     await new Promise(r => setTimeout(r, speed));
   }
 }

@@ -1,16 +1,12 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>학도병 탐구 웹앱</title>
-  <link rel="stylesheet" href="css/style.css"/>
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>학도병 탐구 웹앱</title><link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
   <div class="wrap">
     <div class="page-title">
       <div class="pill pill-title">학도병 이해 및 탐구 웹앱</div>
-      <p class="muted">반·번호·이름을 입력하고, 오늘의 탐구를 시작해요.</p>
+<p class="muted">반·번호·이름을 입력하고, 오늘의 탐구를 시작해요.</p>
     </div>
 
     <div class="cards">
@@ -54,8 +50,8 @@
 
         <div style="margin-top:12px">
           <label class="label">수업 코드</label>
-          <input id="run_id" placeholder="(자동 입력)" autocomplete="off"/>
-          <div class="small muted" style="margin-top:6px">※ 수업 코드는 앱에 내장되어 자동 입력돼요.</div>
+          <input id="run_id" placeholder="선생님이 알려준 코드" autocomplete="off"/>
+          <div class="small muted" style="margin-top:6px">※ 수업 코드는 선생님이 정해 준 값이에요.</div>
         </div>
       </section>
 
@@ -75,70 +71,4 @@
     </div>
   </div>
 
-  <script src="js/config.js"></script>
-  <script type="module">
-    import { setStudent, uid } from './js/utils.js';
 
-    const $ = (id)=>document.getElementById(id);
-
-    // Prefill embedded class/run code
-    const embedded = (window.RUN_ID || "").trim();
-    if(embedded){
-      $('run_id').value = embedded;
-      $('run_id').readOnly = true;
-      $('run_id').setAttribute('aria-readonly','true');
-    }
-
-    function normalizeClass(s){
-      return (s||"").trim();
-    }
-    function normalizeNumber(s){
-      return (s||"").replace(/\s+/g,'').trim();
-    }
-
-    function validate(){
-      const c1 = $('c1').checked, c2 = $('c2').checked, c3 = $('c3').checked;
-      if(!(c1 && c2 && c3)) return { ok:false, msg:'탐구 태도 체크 3개를 모두 체크해 주세요.' };
-
-      const class_name = normalizeClass($('class_name').value);
-      const number = normalizeNumber($('number').value);
-      const name = ($('name').value||"").trim();
-      const run_id = ($('run_id').value||"").trim();
-
-      if(!class_name) return { ok:false, msg:'반을 입력해 주세요.' };
-      if(!number) return { ok:false, msg:'번호를 입력해 주세요.' };
-      if(!/^[0-9]+$/.test(number)) return { ok:false, msg:'번호는 숫자만 입력해 주세요.' };
-      if(!name) return { ok:false, msg:'이름을 입력해 주세요.' };
-
-      if(embedded && run_id !== embedded){
-        return { ok:false, msg:`수업 코드가 맞지 않아요. (자동 입력값: ${embedded})` };
-      }
-      if(!embedded && !run_id){
-        return { ok:false, msg:'수업 코드를 입력해 주세요.' };
-      }
-
-      return { ok:true, profile:{
-        run_id: embedded || run_id,
-        class_name,
-        number,
-        name,
-        student_id: `${class_name}-${number}-${name}`,
-        run_session: uid(),
-      }};
-    }
-
-    $('startBtn').addEventListener('click', ()=>{
-      const v = validate();
-      if(!v.ok){ alert(v.msg); return; }
-      // run_id is also used as run_id in submissions
-      setStudent({ ...v.profile, run_id: v.profile.run_id, run_id_label: v.profile.run_id });
-      location.href = 'scene.html?scene=1';
-    });
-
-    // Enter key to start
-    ['class_name','number','name'].forEach(id=>{
-      $(id).addEventListener('keydown', (e)=>{ if(e.key==='Enter') $('startBtn').click(); });
-    });
-  </script>
-</body>
-</html>
