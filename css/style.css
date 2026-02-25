@@ -97,48 +97,39 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
 
 
 /* ===============================
-   🎨 v23 UX Color Upgrade (Grade 5 Optimized)
+   🎨 v24 UX Color Upgrade (Grade 5)
+   - Fix: 실제 카드(.status) 배경 적용
    =============================== */
 
-/* 자료 내용 카드 */
-.card-accent,
-.data-card {
-    background: #F6F1E8 !important;
-    border: 1px solid #E2DBCF !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
-}
-
-/* 탐구 활동 카드 */
-.activity-card,
-.question-card {
-    background: #EAF2F8 !important;
-    border: 1px solid #D4E3F1 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
-}
-
-/* 나의 답 입력 영역 */
-textarea,
-.answer-input {
-    background: #FFFFFF !important;
-    border: 1px solid #C9D8E6 !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
-}
-
-textarea:focus,
-.answer-input:focus {
-    border-color: #3B6FD8 !important;
-    box-shadow: 0 0 0 3px rgba(59,111,216,0.15) !important;
-}
-
-/* 카드 모서리 부드럽게 */
-.card,
-.card-accent,
-.activity-card {
-    border-radius: 16px !important;
-}
-
 /* 전체 배경 약간 따뜻하게 */
-body {
-    background: #F8F6F2 !important;
+body{
+  background:#F8F6F2 !important;
 }
 
+/* Scene 화면: 왼쪽(자료) / 오른쪽(탐구) 카드 배경 분리 */
+.grid.grid2 > .status:first-child{
+  background:#F6F1E8 !important; /* 따뜻한 아이보리 */
+  border:1px solid #E2DBCF !important;
+  box-shadow:0 4px 10px rgba(0,0,0,.05) !important;
+}
+.grid.grid2 > .status:last-child{
+  background:#EAF2F8 !important; /* 아주 연한 블루 */
+  border:1px solid #D4E3F1 !important;
+  box-shadow:0 4px 12px rgba(0,0,0,.06) !important;
+}
+
+/* 텍스트 입력(나의 답) */
+#answerBox, textarea{
+  background:#FFFFFF !important;
+  border:1px solid #C9D8E6 !important;
+  box-shadow:0 2px 6px rgba(0,0,0,.05) !important;
+}
+#answerBox:focus, textarea:focus{
+  border-color:#3B6FD8 !important;
+  box-shadow:0 0 0 3px rgba(59,111,216,.15) !important;
+}
+
+/* 공통 카드 라운드 조금 더 부드럽게 */
+.status{
+  border-radius:16px !important;
+}
